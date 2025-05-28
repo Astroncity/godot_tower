@@ -1,3 +1,71 @@
-[gd_scene format=3 uid="uid://fft0btkoj1mp"]
+[gd_scene load_steps=10 format=3 uid="uid://fft0btkoj1mp"]
 
-[node name="Node3D" type="Node3D"]
+[ext_resource type="Script" uid="uid://by1waqj1rjfde" path="res://PlayerMovement.cs" id="1_80nbo"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mwb40"]
+sky_top_color = Color(0.145719, 0.499181, 0.667753, 1)
+sky_horizon_color = Color(0.75249, 0.845557, 0.887185, 1)
+ground_horizon_color = Color(0.75249, 0.845557, 0.887185, 1)
+
+[sub_resource type="Sky" id="Sky_80nbo"]
+sky_material = SubResource("ProceduralSkyMaterial_mwb40")
+
+[sub_resource type="Environment" id="Environment_e2o6t"]
+background_mode = 2
+sky = SubResource("Sky_80nbo")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e2o6t"]
+albedo_color = Color(0.300521, 0.461866, 0.263161, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_feb5d"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mwb40"]
+size = Vector3(16.7258, 0.506714, 16.7017)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_80nbo"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_mwb40"]
+
+[node name="Game" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_e2o6t")
+
+[node name="Ground" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+transform = Transform3D(8.355, 0, 0, 0, 8.355, 0, 0, 0, 8.355, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_e2o6t")
+mesh = SubResource("PlaneMesh_feb5d")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="Ground"]
+lock_rotation = true
+freeze = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0391846, -0.246643, 0.000244141)
+shape = SubResource("BoxShape3D_mwb40")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.663313, 0.748342, 0, -0.748342, 0.663313, 0, 8.49583, -13.4699)
+
+[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("cam", "pivot")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00456667, 1.12633, -0.00218678)
+script = ExtResource("1_80nbo")
+cam = NodePath("camPivot/Camera")
+pivot = NodePath("camPivot")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00225961, -5.96046e-08, 0.00256801)
+shape = SubResource("CapsuleShape3D_80nbo")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
+mesh = SubResource("CapsuleMesh_mwb40")
+skeleton = NodePath("")
+
+[node name="camPivot" type="Node3D" parent="Player"]
+
+[node name="Camera" type="Camera3D" parent="Player/camPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04142, 0.508812, -0.0605535)

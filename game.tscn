@@ -1,6 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://fft0btkoj1mp"]
+[gd_scene load_steps=13 format=3 uid="uid://fft0btkoj1mp"]
 
-[ext_resource type="Script" uid="uid://by1waqj1rjfde" path="res://PlayerMovement.cs" id="1_80nbo"]
+[ext_resource type="Script" uid="uid://0piyh86yquxs" path="res://PlayerMovement.cs" id="1_80nbo"]
+[ext_resource type="Script" uid="uid://kn7gnu4iayp2" path="res://ItemDB.cs" id="2_e2o6t"]
+[ext_resource type="PackedScene" uid="uid://cj84x6trx8fx4" path="res://shelf.tscn" id="3_feb5d"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mwb40"]
 sky_top_color = Color(0.145719, 0.499181, 0.667753, 1)
@@ -17,26 +19,36 @@ tonemap_mode = 2
 glow_enabled = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e2o6t"]
-albedo_color = Color(0.300521, 0.461866, 0.263161, 1)
+albedo_color = Color(0.0338813, 0.0082039, 0.0404556, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_feb5d"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_mwb40"]
-size = Vector3(16.7258, 0.506714, 16.7017)
+size = Vector3(16.7258, 0.145081, 16.7017)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_80nbo"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_mwb40"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_feb5d"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 400
+corner_radius_top_right = 400
+corner_radius_bottom_right = 400
+corner_radius_bottom_left = 400
 
 [node name="Game" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_e2o6t")
 
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.663313, 0.748342, 0, -0.748342, 0.663313, 0, 8.49583, -13.4699)
+
 [node name="Ground" type="Node3D" parent="."]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
-transform = Transform3D(8.355, 0, 0, 0, 8.355, 0, 0, 0, 8.355, 0, 0, 0)
+transform = Transform3D(8.355, 0, 0, 0, 8.355, 0, 0, 0, 8.355, 0.00554276, 0.0146646, -0.00704861)
 material_override = SubResource("StandardMaterial3D_e2o6t")
 mesh = SubResource("PlaneMesh_feb5d")
 
@@ -45,17 +57,17 @@ lock_rotation = true
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/RigidBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0391846, -0.246643, 0.000244141)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0391846, -0.0658263, 0.000244141)
 shape = SubResource("BoxShape3D_mwb40")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.663313, 0.748342, 0, -0.748342, 0.663313, 0, 8.49583, -13.4699)
 
 [node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("cam", "pivot")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00456667, 1.12633, -0.00218678)
 script = ExtResource("1_80nbo")
+speed = 4.015
+jump_vel = 0.0
 cam = NodePath("camPivot/Camera")
 pivot = NodePath("camPivot")
+lookDistance = 10
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00225961, -5.96046e-08, 0.00256801)
@@ -66,6 +78,82 @@ mesh = SubResource("CapsuleMesh_mwb40")
 skeleton = NodePath("")
 
 [node name="camPivot" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.403623)
 
 [node name="Camera" type="Camera3D" parent="Player/camPivot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04142, 0.508812, -0.0605535)
+
+[node name="container UI" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Panel" type="Panel" parent="container UI"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 16.2
+anchor_bottom = 16.2
+offset_top = -184.0
+offset_right = 1152.0
+grow_vertical = 0
+
+[node name="containers" type="HBoxContainer" parent="container UI/Panel"]
+layout_mode = 0
+offset_top = 2.0
+offset_right = 1151.0
+offset_bottom = 42.0
+
+[node name="containerName" type="RichTextLabel" parent="container UI/Panel/containers"]
+clip_contents = false
+custom_minimum_size = Vector2(134.82, 0)
+layout_mode = 2
+text = "ContainerName"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="container UI/Panel"]
+layout_mode = 0
+offset_top = 42.0
+offset_right = 1152.0
+offset_bottom = 184.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+
+[node name="ItemDB" type="Node3D" parent="."]
+script = ExtResource("2_e2o6t")
+containers = Array[PackedScene]([ExtResource("3_feb5d")])
+
+[node name="Shelf" parent="." instance=ExtResource("3_feb5d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.277772, 1.03737, -4.09097)
+
+[node name="PlayerUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="PlayerUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 5.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(5, 5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_feb5d")

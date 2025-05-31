@@ -2,7 +2,7 @@ using Godot;
 
 public partial class PlayerMovement : CharacterBody3D {
     [Export] public float speed = 8.0f;
-    [Export] public float jump_velocity = 4.5f;
+    [Export] public float jump_vel = 4.5f;
     const float g = 9.8f;
     Vector3 vel = Vector3.Zero;
 
@@ -12,9 +12,32 @@ public partial class PlayerMovement : CharacterBody3D {
     float pitch = 0f;
 	[Export] public Node3D pivot;
 
+	public static Node3D aimingAt;
+	[Export] public int lookDistance;
+
 
 	public override void _Ready() {
         Input.MouseMode = Input.MouseModeEnum.Captured;
+	}
+	
+	public override void _PhysicsProcess(double delta) {
+        Move((float)delta);
+		GetAiming();
+    }
+
+	private void GetAiming() {
+		var state = GetWorld3D().DirectSpaceState;
+		var origin = cam.GlobalPosition - GlobalTransform.Basis.Z * 2;
+		var end = origin - GlobalTransform.Basis.Z * lookDistance;
+
+		var q = PhysicsRayQueryParameters3D.Create(origin, end);
+		q.CollideWithAreas = true;
+		var res = state.IntersectRay(q);
+		if (res.Count == 0) {aimingAt = null; return;}
+
+		var col = (RigidBody3D)res["collider"];
+		aimingAt = col.GetParentNode3D();
+		
 	}
 	
     public override void _Input(InputEvent @event) {
@@ -27,10 +50,8 @@ public partial class PlayerMovement : CharacterBody3D {
         }
     }
 
-    public override void _PhysicsProcess(double delta) {
-        float dt = (float)delta;
-
-        Vector3 in_dir = Vector3.Zero;
+	private void Move(float dt) {
+		Vector3 in_dir = Vector3.Zero;
 
         if (Input.IsActionPressed("move_forward"))
             in_dir -= Transform.Basis.Z;
@@ -43,7 +64,6 @@ public partial class PlayerMovement : CharacterBody3D {
 
 		
 		in_dir = in_dir.Normalized();
-		GD.Print(cam.GlobalRotation);
 
         var hvel = in_dir * speed;
         vel.X = hvel.X;
@@ -55,9 +75,11 @@ public partial class PlayerMovement : CharacterBody3D {
             vel.Y = 0.0f;
 
         if (IsOnFloor() && Input.IsActionJustPressed("jump"))
-            vel.Y = jump_velocity;
+            vel.Y = jump_vel;
 
         Velocity = vel;
         MoveAndSlide();
-    }
+	}
+
+    
 }

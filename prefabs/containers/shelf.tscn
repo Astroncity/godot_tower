@@ -99,10 +99,12 @@ shadow_mesh = SubResource("ArrayMesh_ppx1l")
 [sub_resource type="BoxShape3D" id="BoxShape3D_0edba"]
 size = Vector3(2.06677, 2.05933, 0.581299)
 
-[node name="Shelf" type="Node3D"]
+[node name="Shelf" type="Node3D" node_paths=PackedStringArray("shelfStart", "shelfEnd")]
 script = ExtResource("1_0edba")
 name = "Shelf"
 icon = SubResource("PlaceholderTexture2D_0edba")
+shelfStart = NodePath("start")
+shelfEnd = NodePath("end")
 
 [node name="model" type="MeshInstance3D" parent="."]
 mesh = SubResource("ArrayMesh_42e1u")
@@ -113,3 +115,9 @@ skeleton = NodePath("")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000793457, 0.00402832, 0.0682373)
 shape = SubResource("BoxShape3D_0edba")
+
+[node name="end" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.139088)
+
+[node name="start" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.360773)

@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://fft0btkoj1mp"]
+[gd_scene load_steps=14 format=3 uid="uid://fft0btkoj1mp"]
 
 [ext_resource type="Script" uid="uid://0piyh86yquxs" path="res://PlayerMovement.cs" id="1_80nbo"]
 [ext_resource type="Script" uid="uid://kn7gnu4iayp2" path="res://ItemDB.cs" id="2_e2o6t"]
-[ext_resource type="PackedScene" uid="uid://cj84x6trx8fx4" path="res://shelf.tscn" id="3_feb5d"]
+[ext_resource type="PackedScene" uid="uid://c2eepl5vc7biw" path="res://prefabs/products/chips.tscn" id="3_fc0e3"]
+[ext_resource type="PackedScene" uid="uid://cj84x6trx8fx4" path="res://prefabs/containers/shelf.tscn" id="3_feb5d"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mwb40"]
 sky_top_color = Color(0.145719, 0.499181, 0.667753, 1)
@@ -119,10 +120,9 @@ offset_top = 42.0
 offset_right = 1152.0
 offset_bottom = 184.0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-
 [node name="ItemDB" type="Node3D" parent="."]
 script = ExtResource("2_e2o6t")
+products = Array[PackedScene]([ExtResource("3_fc0e3")])
 containers = Array[PackedScene]([ExtResource("3_feb5d")])
 
 [node name="Shelf" parent="." instance=ExtResource("3_feb5d")]
